@@ -1,25 +1,23 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const dotenv = require("dotenv");
+const authRoutes = require("./routes/loginRoutes");
 
+dotenv.config();
 const app = express();
-const port = 4000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// DB Connection
+// Database connection
 mongoose
-  .connect("mongodb://localhost:27017/class-vi", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("✅ MongoDB connected successfully"))
-  .catch((err) => console.log("❌ Error in DB:", err));
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.log("❌ DB connection error:", err));
 
 // Routes
+app.use("/api/auth", authRoutes);
 
-app.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
