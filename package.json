@@ -19,7 +19,8 @@
     "googleapis": "^160.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.2",
-    "nodemailer": "^7.0.6"
+    "nodemailer": "^7.0.6",
+    "nodemon": "^3.1.10"
   },
   "engines": {
     "node": ">=18.0.0"

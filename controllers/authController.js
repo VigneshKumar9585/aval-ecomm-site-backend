@@ -36,7 +36,7 @@ const registerUser = async (req, res) => {
     });
 
     // Activation link
-    const activationLink = `${process.env.CLIENT_URL}/activate/${activationToken}`;
+    const activationLink = `${process.env.CLIENT_URL}/activation-page/${activationToken}`;
 
     // Send activation email
     await sendMail(
@@ -58,16 +58,22 @@ const registerUser = async (req, res) => {
 const activateUser = async (req, res) => {
   try {
     const { token } = req.params;
+    console.log("Activation token:", token);
 
-    const user = await User.findOne({ activationToken: token });
-    if (!user) return res.status(400).json({ message: "Invalid or expired activation link" });
+const user = await User.findOneAndUpdate(
+  { activationToken: token, isActive: false },
+  { isActive: true, activationToken: null },
+  { new: true }
+);
+if (!user) {
+      // If no user found (invalid token or already activated)
+      console.log("Invalid or expired activation token");
+      return res.status(400).json({ message: "Invalid or expired activation link" });
+    }
 
-    user.isActive = true;
-    user.activationToken = null;
-    await user.save();
-
-    res.status(200).json({ message: "Account activated successfully. You can now log in." });
+res.status(200).json({ message: "Account activated successfully. You can now log in." });
   } catch (err) {
+    console.log("❌ Activation error:", err);
     console.error(err);
     res.status(500).json({ message: "Server error", error: err.message });
   }
