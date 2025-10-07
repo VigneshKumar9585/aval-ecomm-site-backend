@@ -5,6 +5,13 @@ const User = require("../models/User");
 const sendMail = require("../utils/sendMail");
 
 // ✅ REGISTER USER
+const authControler = {
+
+  
+}
+
+
+module.exports = authControler
 const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, phone, password, address, city, zip, country } = req.body;
